@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 
-function normalizeScoreItem(item: any) {
+interface NormalizedScore {
+  name: string;
+  timeStr: string;
+  totalSeconds: number;
+  date: string;
+}
+
+function normalizeScoreItem(item: any): NormalizedScore {
   let name = String(item.name || "");
   let timeStr = String(item.timeStr || item.finishtime || "");
   let totalSeconds = typeof item.totalSeconds === "number" ? item.totalSeconds : 999999;
@@ -140,7 +147,7 @@ export async function POST(req: Request) {
     }
 
     // 최신 구글 시트 랭킹 재조회
-    let updatedTop3 = [];
+    let updatedTop3: NormalizedScore[] = [];
     try {
       const fetchRes = await fetch(googleScriptUrl, {
         cache: "no-store",
